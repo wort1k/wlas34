@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .upload-container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .upload-container h1 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .success-message {
+            color: green;
+            margin-bottom: 15px;
+        }
+
+        .error-list {
+            text-align: left;
+            color: red;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+<div class="upload-container">
+    <h1>Загрузите JSON файл</h1>
+
+    {% if success %}
+        <p class="success-message">✅ Файл успешно загружен и данные сохранены!</p>
+    {% endif %}
+
+    {% if errors %}
+        <div class="error-list">
+            <strong>❌ Ошибки валидации:</strong>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="file-input-wrapper">
+            <input type="file" name="json_file" accept=".json" required class="file-input" id="fileInput">
+            <label for="fileInput" class="file-label">Выберите JSON файл</label>
+            <div class="file-name" id="fileName">Файл не выбран</div>
+        </div>
+
+        <button type="submit">Загрузить</button>
+    </form>
+</div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            fileName.textContent = fileInput.files[0].name;
+        } else {
+            fileName.textContent = 'Файл не выбран';
+        }
+    });
+</script>
+
+</body>
+</html>
